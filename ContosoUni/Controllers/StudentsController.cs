@@ -33,7 +33,11 @@ namespace ContosoUni.Controllers
             }
 
             var student = await _context.Student
-                .FirstOrDefaultAsync(m => m.ID == id);
+        .Include(s => s.Enrollments)
+            .ThenInclude(e => e.Course)
+        .AsNoTracking()
+        .FirstOrDefaultAsync(m => m.ID == id);
+
             if (student == null)
             {
                 return NotFound();
