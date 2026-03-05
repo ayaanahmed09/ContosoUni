@@ -1,16 +1,38 @@
 using ContosoUni.Models;
+using ContosoUni.Models.SchoolViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace ContosoUni.Controllers
 {
     public class HomeController : Controller
     {
+
+        private readonly SchoolContext _context;
+        public HomeController(ILogger<HomeController> logger, SchoolContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<ActionResult> About()
+        {
+            IQueryable<EnrollmentDateGroup> data =
+                from student in _context.Student
+                group student by student.EnrollmentDate into dateGroup
+                select new EnrollmentDateGroup()
+                {
+                    EnrollmentDate = dateGroup.Key,
+                    StudentCount = dateGroup.Count()
+                };
+            return View(await data.AsNoTracking().ToListAsync());
+        }
+
         public IActionResult Index()
         {
             return View();
         }
-
+        
         public IActionResult Privacy()
         {
             return View();
