@@ -1,5 +1,5 @@
 ﻿using ContosoUni.Models;
-using ContosoUniversity.Models;
+using ContosoUni.Models;
 using System;
 using System.Linq;
 
