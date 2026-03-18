@@ -1,11 +1,4 @@
-﻿using ContosoUni.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ContosoUni.Models;
-
-namespace ContosoUni.Models.SchoolViewModels
+﻿namespace ContosoUni.Models.SchoolViewModels
 {
     public class InstructorIndexData
     {
