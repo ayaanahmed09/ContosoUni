@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ContosoUni.Data;
 
 namespace ContosoUni.Controllers
 {
@@ -23,7 +24,7 @@ namespace ContosoUni.Controllers
         public async Task<IActionResult> Index(int? id, int? courseID)
         {
             var viewModel = new InstructorIndexData();
-            viewModel.Instructors = await _context.Instructor
+            viewModel.Instructors = await _context.Instructors
                   .Include(i => i.OfficeAssignment)
                   .Include(i => i.CourseAssignments)
                     .ThenInclude(i => i.Course)
@@ -62,7 +63,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var instructor = await _context.Instructor
+            var instructor = await _context.Instructors
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (instructor == null)
             {
@@ -115,7 +116,7 @@ namespace ContosoUni.Controllers
             {
                 return NotFound();
             }
-            var instructor = await _context.Instructor
+            var instructor = await _context.Instructors
                    .Include(i => i.OfficeAssignment)
                    .Include(i => i.CourseAssignments).ThenInclude(i => i.Course)
                    .AsNoTracking()
@@ -130,7 +131,7 @@ namespace ContosoUni.Controllers
 
         private void PopulateAssignedCourseData(Instructor instructor)
         {
-            var allCourses = _context.Course;
+            var allCourses = _context.Courses;
             var instructorCourses = new HashSet<int>(instructor.CourseAssignments.Select(c => c.CourseID));
             var viewModel = new List<AssignedCourseData>();
             foreach (var course in allCourses)
@@ -157,7 +158,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var instructorToUpdate = await _context.Instructor
+            var instructorToUpdate = await _context.Instructors
                 .Include(i => i.OfficeAssignment)
                 .Include(i => i.CourseAssignments)
             .ThenInclude(i => i.Course)
@@ -202,7 +203,7 @@ namespace ContosoUni.Controllers
             var selectedCoursesHS = new HashSet<string>(selectedCourses);
             var instructorCourses = new HashSet<int>
                 (instructorToUpdate.CourseAssignments.Select(c => c.Course.CourseID));
-            foreach (var course in _context.Course)
+            foreach (var course in _context.Courses)
             {
                 if (selectedCoursesHS.Contains(course.CourseID.ToString()))
                 {
@@ -231,7 +232,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var instructor = await _context.Instructor
+            var instructor = await _context.Instructors
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (instructor == null)
             {
@@ -246,16 +247,16 @@ namespace ContosoUni.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            Instructor instructor = await _context.Instructor
+            Instructor instructor = await _context.Instructors
         .Include(i => i.CourseAssignments)
         .SingleAsync(i => i.ID == id);
 
-            var departments = await _context.Department
+            var departments = await _context.Departments
         .Where(d => d.InstructorID == id)
         .ToListAsync();
             departments.ForEach(d => d.InstructorID = null);
 
-            _context.Instructor.Remove(instructor);
+            _context.Instructors.Remove(instructor);
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -263,7 +264,7 @@ namespace ContosoUni.Controllers
 
         private bool InstructorExists(int id)
         {
-            return _context.Instructor.Any(e => e.ID == id);
+            return _context.Instructors.Any(e => e.ID == id);
         }
     }
 }

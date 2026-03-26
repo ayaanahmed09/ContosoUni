@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ContosoUni.Models;
+using ContosoUni.Data;
 
 namespace ContosoUni.Controllers
 {
@@ -40,7 +41,7 @@ namespace ContosoUni.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            var students = from s in _context.Student
+            var students = from s in _context.Students
                            select s;
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -106,7 +107,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var student = await _context.Student.FindAsync(id);
+            var student = await _context.Students.FindAsync(id);
             if (student == null)
             {
                 return NotFound();
@@ -125,7 +126,7 @@ namespace ContosoUni.Controllers
             {
                 return NotFound();
             }
-            var studentToUpdate = await _context.Student.FirstOrDefaultAsync(s => s.ID == id);
+            var studentToUpdate = await _context.Students.FirstOrDefaultAsync(s => s.ID == id);
             if (await TryUpdateModelAsync<Student>(
                 studentToUpdate,
                 "",
@@ -155,7 +156,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var student = await _context.Student
+            var student = await _context.Students
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (student == null)
@@ -178,7 +179,7 @@ namespace ContosoUni.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var student = await _context.Student.FindAsync(id);
+            var student = await _context.Students.FindAsync(id);
             if (student == null)
             {
                 return RedirectToAction(nameof(Index));
@@ -186,7 +187,7 @@ namespace ContosoUni.Controllers
 
             try
             {
-                _context.Student.Remove(student);
+                _context.Students.Remove(student);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -200,7 +201,7 @@ namespace ContosoUni.Controllers
 
         private bool StudentExists(int id)
         {
-            return _context.Student.Any(e => e.ID == id);
+            return _context.Students.Any(e => e.ID == id);
         }
     }
 }

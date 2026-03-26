@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ContosoUni.Models;
+using ContosoUni.Data;
 
 namespace ContosoUni.Controllers
 {
@@ -21,7 +22,7 @@ namespace ContosoUni.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Course.ToListAsync());
+            return View(await _context.Courses.ToListAsync());
         }
 
         // GET: Courses/Details/5
@@ -32,7 +33,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var course = await _context.Course
+            var course = await _context.Courses
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.CourseID == id);
             if (course == null)
@@ -75,7 +76,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var course = await _context.Course
+            var course = await _context.Courses
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.CourseID == id);
             if (course == null)
@@ -98,7 +99,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var courseToUpdate = await _context.Course
+            var courseToUpdate = await _context.Courses
                 .FirstOrDefaultAsync(c => c.CourseID == id);
 
             if (await TryUpdateModelAsync<Course>(courseToUpdate,
@@ -124,7 +125,7 @@ namespace ContosoUni.Controllers
 
         private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
         {
-            var departmentsQuery = from d in _context.Department
+            var departmentsQuery = from d in _context.Departments
                                    orderby d.Name
                                    select d;
             ViewBag.DepartmentID = new SelectList(departmentsQuery.AsNoTracking(), "DepartmentID", "Name", selectedDepartment);
@@ -138,7 +139,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var course = await _context.Course
+            var course = await _context.Courses
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.CourseID == id);
             if (course == null)
@@ -154,10 +155,10 @@ namespace ContosoUni.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var course = await _context.Course.FindAsync(id);
+            var course = await _context.Courses.FindAsync(id);
             if (course != null)
             {
-                _context.Course.Remove(course);
+                _context.Courses.Remove(course);
             }
 
             await _context.SaveChangesAsync();
@@ -166,7 +167,7 @@ namespace ContosoUni.Controllers
 
         private bool CourseExists(int id)
         {
-            return _context.Course.Any(e => e.CourseID == id);
+            return _context.Courses.Any(e => e.CourseID == id);
         }
     }
 }

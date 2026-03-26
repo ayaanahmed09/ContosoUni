@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ContosoUni.Models;
+using ContosoUni.Data;
 
 namespace ContosoUni.Controllers
 {
@@ -21,7 +22,7 @@ namespace ContosoUni.Controllers
         // GET: Departments
         public async Task<IActionResult> Index()
         {
-            var schoolContext = _context.Department.Include(d => d.Administrator);
+            var schoolContext = _context.Departments.Include(d => d.Administrator);
             return View(await schoolContext.ToListAsync());
         }
 
@@ -33,7 +34,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Department
+            var department = await _context.Departments
                 .Include(d => d.Administrator)
                 .FirstOrDefaultAsync(m => m.DepartmentID == id);
             if (department == null)
@@ -76,7 +77,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Department.FindAsync(id);
+            var department = await _context.Departments.FindAsync(id);
             if (department == null)
             {
                 return NotFound();
@@ -129,7 +130,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Department
+            var department = await _context.Departments
                 .Include(d => d.Administrator)
                 .FirstOrDefaultAsync(m => m.DepartmentID == id);
             if (department == null)
@@ -145,10 +146,10 @@ namespace ContosoUni.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var department = await _context.Department.FindAsync(id);
+            var department = await _context.Departments.FindAsync(id);
             if (department != null)
             {
-                _context.Department.Remove(department);
+                _context.Departments.Remove(department);
             }
 
             await _context.SaveChangesAsync();
@@ -157,7 +158,7 @@ namespace ContosoUni.Controllers
 
         private bool DepartmentExists(int id)
         {
-            return _context.Department.Any(e => e.DepartmentID == id);
+            return _context.Departments.Any(e => e.DepartmentID == id);
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using ContosoUni.Data; 
 
 #nullable disable
 
@@ -41,7 +42,7 @@ namespace ContosoUni.Migrations
 
                     b.HasIndex("InstructorID1");
 
-                    b.ToTable("CourseAssignment");
+                    b.ToTable("CourseAssignment", (string)null);
                 });
 
             modelBuilder.Entity("ContosoUni.Models.Department", b =>
@@ -70,7 +71,7 @@ namespace ContosoUni.Migrations
 
                     b.HasIndex("InstructorID");
 
-                    b.ToTable("Department");
+                    b.ToTable("Department", (string)null);
                 });
 
             modelBuilder.Entity("ContosoUni.Models.Instructor", b =>
@@ -97,7 +98,7 @@ namespace ContosoUni.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Instructor");
+                    b.ToTable("Instructor", (string)null);
                 });
 
             modelBuilder.Entity("ContosoUni.Models.OfficeAssignment", b =>
@@ -112,7 +113,7 @@ namespace ContosoUni.Migrations
 
                     b.HasKey("InstructorID");
 
-                    b.ToTable("OfficeAssignment");
+                    b.ToTable("OfficeAssignment", (string)null);
                 });
 
             modelBuilder.Entity("ContosoUniversity.Models.Course", b =>
@@ -135,7 +136,7 @@ namespace ContosoUni.Migrations
 
                     b.HasIndex("DepartmentID");
 
-                    b.ToTable("Course");
+                    b.ToTable("Course", (string)null);
                 });
 
             modelBuilder.Entity("ContosoUniversity.Models.Enrollment", b =>
@@ -161,7 +162,7 @@ namespace ContosoUni.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("Enrollment");
+                    b.ToTable("Enrollment", (string)null);
                 });
 
             modelBuilder.Entity("ContosoUniversity.Models.Student", b =>
@@ -188,7 +189,7 @@ namespace ContosoUni.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Student");
+                    b.ToTable("Student", (string)null);
                 });
 
             modelBuilder.Entity("ContosoUni.Models.CourseAssignment", b =>

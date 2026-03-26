@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ContosoUni.Models;
-
+using ContosoUni.Data;
 namespace ContosoUni.Controllers
+
 {
     public class CourseAssignmentsController : Controller
     {
@@ -21,7 +22,7 @@ namespace ContosoUni.Controllers
         // GET: CourseAssignments
         public async Task<IActionResult> Index()
         {
-            var schoolContext = _context.CourseAssignment.Include(c => c.Course);
+            var schoolContext = _context.CourseAssignments.Include(c => c.Course);
             return View(await schoolContext.ToListAsync());
         }
 
@@ -33,7 +34,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var courseAssignment = await _context.CourseAssignment
+            var courseAssignment = await _context.CourseAssignments
                 .Include(c => c.Course)
                 .FirstOrDefaultAsync(m => m.InstructorID == id);
             if (courseAssignment == null)
@@ -47,7 +48,7 @@ namespace ContosoUni.Controllers
         // GET: CourseAssignments/Create
         public IActionResult Create()
         {
-            ViewData["CourseID"] = new SelectList(_context.Course, "CourseID", "CourseID");
+            ViewData["CourseID"] = new SelectList(_context.Courses, "CourseID", "CourseID");
             return View();
         }
 
@@ -64,7 +65,7 @@ namespace ContosoUni.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseID"] = new SelectList(_context.Course, "CourseID", "CourseID", courseAssignment.CourseID);
+            ViewData["CourseID"] = new SelectList(_context.Courses, "CourseID", "CourseID", courseAssignment.CourseID);
             return View(courseAssignment);
         }
 
@@ -76,12 +77,12 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var courseAssignment = await _context.CourseAssignment.FindAsync(id);
+            var courseAssignment = await _context.CourseAssignments.FindAsync(id);
             if (courseAssignment == null)
             {
                 return NotFound();
             }
-            ViewData["CourseID"] = new SelectList(_context.Course, "CourseID", "CourseID", courseAssignment.CourseID);
+            ViewData["CourseID"] = new SelectList(_context.Courses, "CourseID", "CourseID", courseAssignment.CourseID);
             return View(courseAssignment);
         }
 
@@ -117,7 +118,7 @@ namespace ContosoUni.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseID"] = new SelectList(_context.Course, "CourseID", "CourseID", courseAssignment.CourseID);
+            ViewData["CourseID"] = new SelectList(_context.Courses, "CourseID", "CourseID", courseAssignment.CourseID);
             return View(courseAssignment);
         }
 
@@ -129,7 +130,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var courseAssignment = await _context.CourseAssignment
+            var courseAssignment = await _context.CourseAssignments
                 .Include(c => c.Course)
                 .FirstOrDefaultAsync(m => m.InstructorID == id);
             if (courseAssignment == null)
@@ -145,10 +146,10 @@ namespace ContosoUni.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var courseAssignment = await _context.CourseAssignment.FindAsync(id);
+            var courseAssignment = await _context.CourseAssignments.FindAsync(id);
             if (courseAssignment != null)
             {
-                _context.CourseAssignment.Remove(courseAssignment);
+                _context.CourseAssignments.Remove(courseAssignment);
             }
 
             await _context.SaveChangesAsync();
@@ -157,7 +158,7 @@ namespace ContosoUni.Controllers
 
         private bool CourseAssignmentExists(int id)
         {
-            return _context.CourseAssignment.Any(e => e.InstructorID == id);
+            return _context.CourseAssignments.Any(e => e.InstructorID == id);
         }
     }
 }

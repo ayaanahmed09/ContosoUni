@@ -1,18 +1,21 @@
-﻿using ContosoUni.Models;
+﻿using ContosoUni.Data;
 using ContosoUni.Models;
+using ContosoUni.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 
 namespace ContosoUni.Data
 {
-    public class DbInitializer
+    public static class DbInitializer
     {
         public static void Initialize(SchoolContext context)
         {
             //context.Database.EnsureCreated();
 
             // Look for any students.
-            if (context.Student.Any())
+            if (context.Students.Any())
             {
                 return;   // DB has been seeded
             }
@@ -39,7 +42,7 @@ namespace ContosoUni.Data
 
             foreach (Student s in students)
             {
-                context.Student.Add(s);
+                context.Students.Add(s);
             }
             context.SaveChanges();
 
@@ -59,7 +62,7 @@ namespace ContosoUni.Data
 
             foreach (Instructor i in instructors)
             {
-                context.Instructor.Add(i);
+                context.Instructors.Add(i);
             }
             context.SaveChanges();
 
@@ -81,7 +84,7 @@ namespace ContosoUni.Data
 
             foreach (Department d in departments)
             {
-                context.Department.Add(d);
+                context.Departments.Add(d);
             }
             context.SaveChanges();
 
@@ -112,7 +115,7 @@ namespace ContosoUni.Data
 
             foreach (Course c in courses)
             {
-                context.Course.Add(c);
+                context.Courses.Add(c);
             }
             context.SaveChanges();
 
@@ -131,7 +134,7 @@ namespace ContosoUni.Data
 
             foreach (OfficeAssignment o in officeAssignments)
             {
-                context.OfficeAssignment.Add(o);
+                context.OfficeAssignments.Add(o);
             }
             context.SaveChanges();
 
@@ -173,7 +176,7 @@ namespace ContosoUni.Data
 
             foreach (CourseAssignment ci in courseInstructors)
             {
-                context.CourseAssignment.Add(ci);
+                context.CourseAssignments.Add(ci);
             }
             context.SaveChanges();
 
@@ -237,13 +240,13 @@ namespace ContosoUni.Data
 
             foreach (Enrollment e in enrollments)
             {
-                var enrollmentInDataBase = context.Enrollment.Where(
+                var enrollmentInDataBase = context.Enrollments.Where(
                     s =>
                             s.Student.ID == e.StudentID &&
                             s.Course.CourseID == e.CourseID).SingleOrDefault();
                 if (enrollmentInDataBase == null)
                 {
-                    context.Enrollment.Add(e);
+                    context.Enrollments.Add(e);
                 }
             }
             context.SaveChanges();

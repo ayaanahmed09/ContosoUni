@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ContosoUni.Models;
+using ContosoUni.Data;
 
 namespace ContosoUni.Controllers
 {
@@ -21,7 +22,7 @@ namespace ContosoUni.Controllers
         // GET: OfficeAssignments
         public async Task<IActionResult> Index()
         {
-            var schoolContext = _context.OfficeAssignment.Include(o => o.Instructor);
+            var schoolContext = _context.OfficeAssignments.Include(o => o.Instructor);
             return View(await schoolContext.ToListAsync());
         }
 
@@ -33,7 +34,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var officeAssignment = await _context.OfficeAssignment
+            var officeAssignment = await _context.OfficeAssignments
                 .Include(o => o.Instructor)
                 .FirstOrDefaultAsync(m => m.InstructorID == id);
             if (officeAssignment == null)
@@ -47,7 +48,7 @@ namespace ContosoUni.Controllers
         // GET: OfficeAssignments/Create
         public IActionResult Create()
         {
-            ViewData["InstructorID"] = new SelectList(_context.Instructor, "ID", "FirstMidName");
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FirstMidName");
             return View();
         }
 
@@ -64,7 +65,7 @@ namespace ContosoUni.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InstructorID"] = new SelectList(_context.Instructor, "ID", "FirstMidName", officeAssignment.InstructorID);
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FirstMidName", officeAssignment.InstructorID);
             return View(officeAssignment);
         }
 
@@ -76,12 +77,12 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var officeAssignment = await _context.OfficeAssignment.FindAsync(id);
+            var officeAssignment = await _context.OfficeAssignments.FindAsync(id);
             if (officeAssignment == null)
             {
                 return NotFound();
             }
-            ViewData["InstructorID"] = new SelectList(_context.Instructor, "ID", "FirstMidName", officeAssignment.InstructorID);
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FirstMidName", officeAssignment.InstructorID);
             return View(officeAssignment);
         }
 
@@ -117,7 +118,7 @@ namespace ContosoUni.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InstructorID"] = new SelectList(_context.Instructor, "ID", "FirstMidName", officeAssignment.InstructorID);
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FirstMidName", officeAssignment.InstructorID);
             return View(officeAssignment);
         }
 
@@ -129,7 +130,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var officeAssignment = await _context.OfficeAssignment
+            var officeAssignment = await _context.OfficeAssignments
                 .Include(o => o.Instructor)
                 .FirstOrDefaultAsync(m => m.InstructorID == id);
             if (officeAssignment == null)
@@ -145,10 +146,10 @@ namespace ContosoUni.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var officeAssignment = await _context.OfficeAssignment.FindAsync(id);
+            var officeAssignment = await _context.OfficeAssignments.FindAsync(id);
             if (officeAssignment != null)
             {
-                _context.OfficeAssignment.Remove(officeAssignment);
+                _context.OfficeAssignments.Remove(officeAssignment);
             }
 
             await _context.SaveChangesAsync();
@@ -157,7 +158,7 @@ namespace ContosoUni.Controllers
 
         private bool OfficeAssignmentExists(int id)
         {
-            return _context.OfficeAssignment.Any(e => e.InstructorID == id);
+            return _context.OfficeAssignments.Any(e => e.InstructorID == id);
         }
     }
 }

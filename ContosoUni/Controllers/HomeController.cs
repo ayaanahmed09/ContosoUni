@@ -3,6 +3,7 @@ using ContosoUni.Models.SchoolViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using ContosoUni.Data;
 
 namespace ContosoUni.Controllers
 {
@@ -18,7 +19,7 @@ namespace ContosoUni.Controllers
         public async Task<ActionResult> About()
         {
             IQueryable<EnrollmentDateGroup> data =
-                from student in _context.Student
+                from student in _context.Students
                 group student by student.EnrollmentDate into dateGroup
                 select new EnrollmentDateGroup()
                 {

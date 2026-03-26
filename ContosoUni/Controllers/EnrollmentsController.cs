@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ContosoUni.Models;
+using ContosoUni.Data;
 
 namespace ContosoUni.Controllers
 {
@@ -21,7 +22,7 @@ namespace ContosoUni.Controllers
         // GET: Enrollments
         public async Task<IActionResult> Index()
         {
-            var schoolContext = _context.Enrollment.Include(e => e.Course).Include(e => e.Student);
+            var schoolContext = _context.Enrollments.Include(e => e.Course).Include(e => e.Student);
             return View(await schoolContext.ToListAsync());
         }
 
@@ -33,7 +34,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var enrollment = await _context.Enrollment
+            var enrollment = await _context.Enrollments
                 .Include(e => e.Course)
                 .Include(e => e.Student)
                 .FirstOrDefaultAsync(m => m.EnrollmentID == id);
@@ -48,8 +49,8 @@ namespace ContosoUni.Controllers
         // GET: Enrollments/Create
         public IActionResult Create()
         {
-            ViewData["CourseID"] = new SelectList(_context.Course, "CourseID", "CourseID");
-            ViewData["StudentID"] = new SelectList(_context.Student, "ID", "ID");
+            ViewData["CourseID"] = new SelectList(_context.Courses, "CourseID", "CourseID");
+            ViewData["StudentID"] = new SelectList(_context.Students, "ID", "ID");
             return View();
         }
 
@@ -66,8 +67,8 @@ namespace ContosoUni.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseID"] = new SelectList(_context.Course, "CourseID", "CourseID", enrollment.CourseID);
-            ViewData["StudentID"] = new SelectList(_context.Student, "ID", "ID", enrollment.StudentID);
+            ViewData["CourseID"] = new SelectList(_context.Courses, "CourseID", "CourseID", enrollment.CourseID);
+            ViewData["StudentID"] = new SelectList(_context.Students, "ID", "ID", enrollment.StudentID);
             return View(enrollment);
         }
 
@@ -79,13 +80,13 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var enrollment = await _context.Enrollment.FindAsync(id);
+            var enrollment = await _context.Enrollments.FindAsync(id);
             if (enrollment == null)
             {
                 return NotFound();
             }
-            ViewData["CourseID"] = new SelectList(_context.Course, "CourseID", "CourseID", enrollment.CourseID);
-            ViewData["StudentID"] = new SelectList(_context.Student, "ID", "ID", enrollment.StudentID);
+            ViewData["CourseID"] = new SelectList(_context.Courses, "CourseID", "CourseID", enrollment.CourseID);
+            ViewData["StudentID"] = new SelectList(_context.Students, "ID", "ID", enrollment.StudentID);
             return View(enrollment);
         }
 
@@ -121,8 +122,8 @@ namespace ContosoUni.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseID"] = new SelectList(_context.Course, "CourseID", "CourseID", enrollment.CourseID);
-            ViewData["StudentID"] = new SelectList(_context.Student, "ID", "ID", enrollment.StudentID);
+            ViewData["CourseID"] = new SelectList(_context.Courses, "CourseID", "CourseID", enrollment.CourseID);
+            ViewData["StudentID"] = new SelectList(_context.Students, "ID", "ID", enrollment.StudentID);
             return View(enrollment);
         }
 
@@ -134,7 +135,7 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
 
-            var enrollment = await _context.Enrollment
+            var enrollment = await _context.Enrollments
                 .Include(e => e.Course)
                 .Include(e => e.Student)
                 .FirstOrDefaultAsync(m => m.EnrollmentID == id);
@@ -151,10 +152,10 @@ namespace ContosoUni.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var enrollment = await _context.Enrollment.FindAsync(id);
+            var enrollment = await _context.Enrollments.FindAsync(id);
             if (enrollment != null)
             {
-                _context.Enrollment.Remove(enrollment);
+                _context.Enrollments.Remove(enrollment);
             }
 
             await _context.SaveChangesAsync();
@@ -163,7 +164,7 @@ namespace ContosoUni.Controllers
 
         private bool EnrollmentExists(int id)
         {
-            return _context.Enrollment.Any(e => e.EnrollmentID == id);
+            return _context.Enrollments.Any(e => e.EnrollmentID == id);
         }
     }
 }
