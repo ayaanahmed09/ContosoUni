@@ -117,10 +117,10 @@ namespace ContosoUni.Controllers
                 return NotFound();
             }
             var instructor = await _context.Instructors
-                   .Include(i => i.OfficeAssignment)
-                   .Include(i => i.CourseAssignments).ThenInclude(i => i.Course)
-                   .AsNoTracking()
-                   .FirstOrDefaultAsync(m => m.ID == id);
+        .Include(i => i.OfficeAssignment)
+        .Include(i => i.CourseAssignments).ThenInclude(i => i.Course)
+        .AsNoTracking()
+        .FirstOrDefaultAsync(m => m.ID == id);
             if (instructor == null)
             {
                 return NotFound();
@@ -161,7 +161,7 @@ namespace ContosoUni.Controllers
             var instructorToUpdate = await _context.Instructors
                 .Include(i => i.OfficeAssignment)
                 .Include(i => i.CourseAssignments)
-            .ThenInclude(i => i.Course)
+                     .ThenInclude(i => i.Course)
                 .FirstOrDefaultAsync(s => s.ID == id);
 
             if (await TryUpdateModelAsync<Instructor>(
